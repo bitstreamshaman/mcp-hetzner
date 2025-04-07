@@ -1,0 +1,673 @@
+{
+  "functions": [
+    {
+      "name": "list_ssh_keys",
+      "description": "List all SSH keys in your Hetzner Cloud account",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "get_ssh_key",
+      "description": "Get details about a specific SSH key",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "ssh_key_id": {
+            "type": "integer",
+            "description": "The ID of the SSH key"
+          }
+        },
+        "required": ["ssh_key_id"]
+      }
+    },
+    {
+      "name": "create_ssh_key",
+      "description": "Create a new SSH key",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the SSH key"
+          },
+          "public_key": {
+            "type": "string",
+            "description": "The public key in OpenSSH format"
+          },
+          "labels": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "User-defined labels (key-value pairs)"
+          }
+        },
+        "required": ["name", "public_key"]
+      }
+    },
+    {
+      "name": "update_ssh_key",
+      "description": "Update an SSH key",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "ssh_key_id": {
+            "type": "integer",
+            "description": "The ID of the SSH key"
+          },
+          "name": {
+            "type": "string",
+            "description": "New name for the SSH key"
+          },
+          "labels": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "User-defined labels (key-value pairs)"
+          }
+        },
+        "required": ["ssh_key_id", "name"]
+      }
+    },
+    {
+      "name": "delete_ssh_key",
+      "description": "Delete an SSH key",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "ssh_key_id": {
+            "type": "integer",
+            "description": "The ID of the SSH key"
+          }
+        },
+        "required": ["ssh_key_id"]
+      }
+    },
+    {
+      "name": "list_volumes",
+      "description": "List all volumes in your Hetzner Cloud account",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "get_volume",
+      "description": "Get details about a specific volume",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "volume_id": {
+            "type": "integer",
+            "description": "The ID of the volume"
+          }
+        },
+        "required": ["volume_id"]
+      }
+    },
+    {
+      "name": "create_volume",
+      "description": "Create a new volume",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the volume"
+          },
+          "size": {
+            "type": "integer",
+            "description": "Size of the volume in GB (min 10, max 10240)"
+          },
+          "location": {
+            "type": "string",
+            "description": "Location where the volume will be created (e.g., nbg1, fsn1)"
+          },
+          "server": {
+            "type": "integer",
+            "description": "ID of the server to attach the volume to"
+          },
+          "automount": {
+            "type": "boolean",
+            "description": "Auto-mount the volume after attaching it",
+            "default": false
+          },
+          "format": {
+            "type": "string",
+            "description": "Filesystem format (e.g., xfs, ext4)"
+          },
+          "labels": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "User-defined labels (key-value pairs)"
+          }
+        },
+        "required": ["name", "size"]
+      }
+    },
+    {
+      "name": "delete_volume",
+      "description": "Delete a volume",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "volume_id": {
+            "type": "integer",
+            "description": "The ID of the volume"
+          }
+        },
+        "required": ["volume_id"]
+      }
+    },
+    {
+      "name": "attach_volume",
+      "description": "Attach a volume to a server",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "volume_id": {
+            "type": "integer",
+            "description": "The ID of the volume"
+          },
+          "server_id": {
+            "type": "integer",
+            "description": "The ID of the server to attach the volume to"
+          },
+          "automount": {
+            "type": "boolean",
+            "description": "Auto-mount the volume after attaching it",
+            "default": false
+          }
+        },
+        "required": ["volume_id", "server_id"]
+      }
+    },
+    {
+      "name": "detach_volume",
+      "description": "Detach a volume from a server",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "volume_id": {
+            "type": "integer",
+            "description": "The ID of the volume"
+          }
+        },
+        "required": ["volume_id"]
+      }
+    },
+    {
+      "name": "resize_volume",
+      "description": "Resize a volume",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "volume_id": {
+            "type": "integer",
+            "description": "The ID of the volume"
+          },
+          "size": {
+            "type": "integer",
+            "description": "New size of the volume in GB (must be greater than current size)"
+          }
+        },
+        "required": ["volume_id", "size"]
+      }
+    },
+    {
+      "name": "list_servers",
+      "description": "List all servers in your Hetzner Cloud account",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "get_server",
+      "description": "Get details about a specific server",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "server_id": {
+            "type": "integer",
+            "description": "The ID of the server"
+          }
+        },
+        "required": ["server_id"]
+      }
+    },
+    {
+      "name": "create_server",
+      "description": "Create a new server",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the server"
+          },
+          "server_type": {
+            "type": "string",
+            "description": "Server type (e.g., cx11, cx21, etc.)"
+          },
+          "image": {
+            "type": "string",
+            "description": "Image name or ID (e.g., ubuntu-22.04, debian-11, etc.)"
+          },
+          "location": {
+            "type": "string",
+            "description": "Location (e.g., nbg1, fsn1, etc.)",
+            "default": "nbg1"
+          },
+          "ssh_keys": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "description": "List of SSH key IDs"
+          }
+        },
+        "required": ["name", "server_type", "image"]
+      }
+    },
+    {
+      "name": "delete_server",
+      "description": "Delete a server",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "server_id": {
+            "type": "integer",
+            "description": "The ID of the server to delete"
+          }
+        },
+        "required": ["server_id"]
+      }
+    },
+    {
+      "name": "list_images",
+      "description": "List available images",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "list_server_types",
+      "description": "List available server types",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "list_locations",
+      "description": "List available locations",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "power_on",
+      "description": "Power on a server",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "server_id": {
+            "type": "integer",
+            "description": "The ID of the server to power on"
+          }
+        },
+        "required": ["server_id"]
+      }
+    },
+    {
+      "name": "power_off",
+      "description": "Power off a server",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "server_id": {
+            "type": "integer",
+            "description": "The ID of the server to power off"
+          }
+        },
+        "required": ["server_id"]
+      }
+    },
+    {
+      "name": "reboot",
+      "description": "Reboot a server",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "server_id": {
+            "type": "integer",
+            "description": "The ID of the server to reboot"
+          }
+        },
+        "required": ["server_id"]
+      }
+    },
+    {
+      "name": "list_firewalls",
+      "description": "List all firewalls in your Hetzner Cloud account",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "get_firewall",
+      "description": "Get details about a specific firewall",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "firewall_id": {
+            "type": "integer",
+            "description": "The ID of the firewall"
+          }
+        },
+        "required": ["firewall_id"]
+      }
+    },
+    {
+      "name": "create_firewall",
+      "description": "Create a new firewall",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the firewall"
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "direction": {
+                  "type": "string",
+                  "description": "Direction of the rule (in or out)",
+                  "enum": ["in", "out"]
+                },
+                "protocol": {
+                  "type": "string",
+                  "description": "Protocol (tcp, udp, icmp, esp, or gre)",
+                  "enum": ["tcp", "udp", "icmp", "esp", "gre"]
+                },
+                "source_ips": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "List of source IPs in CIDR notation"
+                },
+                "port": {
+                  "type": "string",
+                  "description": "Port or port range (e.g., '80' or '80-85'), only for TCP/UDP"
+                },
+                "destination_ips": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "List of destination IPs in CIDR notation"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description of the rule"
+                }
+              },
+              "required": ["direction", "protocol", "source_ips"]
+            },
+            "description": "List of firewall rules"
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "description": "Type of resource ('server' or 'label_selector')",
+                  "enum": ["server", "label_selector"]
+                },
+                "server_id": {
+                  "type": "integer",
+                  "description": "Server ID (required when type is 'server')"
+                },
+                "label_selector": {
+                  "type": "string",
+                  "description": "Label selector (required when type is 'label_selector')"
+                }
+              },
+              "required": ["type"]
+            },
+            "description": "List of resources to apply the firewall to"
+          },
+          "labels": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "User-defined labels (key-value pairs)"
+          }
+        },
+        "required": ["name"]
+      }
+    },
+    {
+      "name": "update_firewall",
+      "description": "Update a firewall",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "firewall_id": {
+            "type": "integer",
+            "description": "The ID of the firewall"
+          },
+          "name": {
+            "type": "string",
+            "description": "New name for the firewall"
+          },
+          "labels": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "User-defined labels (key-value pairs)"
+          }
+        },
+        "required": ["firewall_id"]
+      }
+    },
+    {
+      "name": "delete_firewall",
+      "description": "Delete a firewall",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "firewall_id": {
+            "type": "integer",
+            "description": "The ID of the firewall"
+          }
+        },
+        "required": ["firewall_id"]
+      }
+    },
+    {
+      "name": "set_firewall_rules",
+      "description": "Set rules for a firewall",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "firewall_id": {
+            "type": "integer",
+            "description": "The ID of the firewall"
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "direction": {
+                  "type": "string",
+                  "description": "Direction of the rule (in or out)",
+                  "enum": ["in", "out"]
+                },
+                "protocol": {
+                  "type": "string",
+                  "description": "Protocol (tcp, udp, icmp, esp, or gre)",
+                  "enum": ["tcp", "udp", "icmp", "esp", "gre"]
+                },
+                "source_ips": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "List of source IPs in CIDR notation"
+                },
+                "port": {
+                  "type": "string",
+                  "description": "Port or port range (e.g., '80' or '80-85'), only for TCP/UDP"
+                },
+                "destination_ips": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "List of destination IPs in CIDR notation"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description of the rule"
+                }
+              },
+              "required": ["direction", "protocol", "source_ips"]
+            },
+            "description": "List of firewall rules"
+          }
+        },
+        "required": ["firewall_id", "rules"]
+      }
+    },
+    {
+      "name": "apply_firewall_to_resources",
+      "description": "Apply a firewall to resources",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "firewall_id": {
+            "type": "integer",
+            "description": "The ID of the firewall"
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "description": "Type of resource ('server' or 'label_selector')",
+                  "enum": ["server", "label_selector"]
+                },
+                "server_id": {
+                  "type": "integer",
+                  "description": "Server ID (required when type is 'server')"
+                },
+                "label_selector": {
+                  "type": "string",
+                  "description": "Label selector (required when type is 'label_selector')"
+                }
+              },
+              "required": ["type"]
+            },
+            "description": "List of resources to apply the firewall to"
+          }
+        },
+        "required": ["firewall_id", "resources"]
+      }
+    },
+    {
+      "name": "remove_firewall_from_resources",
+      "description": "Remove a firewall from resources",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "firewall_id": {
+            "type": "integer",
+            "description": "The ID of the firewall"
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "description": "Type of resource ('server' or 'label_selector')",
+                  "enum": ["server", "label_selector"]
+                },
+                "server_id": {
+                  "type": "integer",
+                  "description": "Server ID (required when type is 'server')"
+                },
+                "label_selector": {
+                  "type": "string",
+                  "description": "Label selector (required when type is 'label_selector')"
+                }
+              },
+              "required": ["type"]
+            },
+            "description": "List of resources to remove the firewall from"
+          }
+        },
+        "required": ["firewall_id", "resources"]
+      }
+    }
+  ]
+}

@@ -2,6 +2,8 @@
 
 A Model Context Protocol (MCP) server for interacting with the Hetzner Cloud API. This server allows language models to manage Hetzner Cloud resources through structured functions.
 
+![MCP Hetzner Demo](media/mcp-hetzner.gif)
+
 ## Features
 
 - List, create, and manage Hetzner Cloud servers

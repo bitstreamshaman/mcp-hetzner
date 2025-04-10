@@ -24,6 +24,9 @@ dependencies = [
     "python-dotenv>=1.0.0",
 ]
 
+[tool.setuptools]
+packages = ["mcp_hetzner"]
+
 [project.urls]
 "Homepage" = "https://github.com/denniskruyt/mcp-hetzner"
 "Bug Tracker" = "https://github.com/denniskruyt/mcp-hetzner/issues"

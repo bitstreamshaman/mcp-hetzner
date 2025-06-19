@@ -7,7 +7,6 @@ import asyncio
 import logging
 import os
 import sys
-from pprint import pprint
 
 import dotenv
 from mcp.client import Client

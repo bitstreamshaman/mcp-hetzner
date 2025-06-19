@@ -14,7 +14,7 @@ This MCP service provides functions to manage Hetzner Cloud resources:
 
 import os
 import sys
-from typing import Dict, List, Optional, Any, Union
+from typing import Dict, List, Optional, Any
 
 import dotenv
 from hcloud import Client
@@ -26,26 +26,48 @@ from hcloud.firewalls.domain import Firewall, FirewallRule, FirewallResource, Fi
 from hcloud.volumes.domain import Volume
 from hcloud.ssh_keys.domain import SSHKey
 from pydantic import BaseModel, Field
+from pathlib import Path
 
 from mcp.server.fastmcp import FastMCP
 
-# Load environment variables
-dotenv.load_dotenv()
+def authenticate():
+    # Load environment variables
+    ifw_env_file = str(Path.home()) + "/.ifw" + "/.ifw.env"
+    dotenv.load_dotenv()
+    dotenv.load_dotenv(ifw_env_file)
 
-# Check if Hetzner Cloud API token is configured
-HCLOUD_TOKEN = os.environ.get("HCLOUD_TOKEN")
-if not HCLOUD_TOKEN:
-    print("Error: HCLOUD_TOKEN environment variable not set. Please add it to your .env file.")
-    sys.exit(1)
+    # Check if Hetzner Cloud API token is configured
+    hcloud_token = os.environ.get("HCLOUD_TOKEN")
+    if not hcloud_token:
+        print("HCLOUD_TOKEN environment variable not set.")
+        hcloud_token = input("Please enter your Hetzner Cloud API token: ").strip()
+        
+    if not hcloud_token:
+        print("Error: No token provided.")
+        sys.exit(1)
+        
+    # Add the token to the environment file
+    try:
+        with open(ifw_env_file, 'a') as f:
+            f.write(f"\nHCLOUD_TOKEN={hcloud_token}\n")
+        
+        # Set it in the current environment as well
+        os.environ['HCLOUD_TOKEN'] = hcloud_token
+        
+    except IOError as e:
+        print(f"Error writing to {ifw_env_file}: {e}")
+        sys.exit(1)
+    
+    return hcloud_token
 
 # Create Hetzner Cloud client
-client = Client(token=HCLOUD_TOKEN)
+client = Client(token=authenticate())
 
 # Create MCP server with server configuration
 mcp = FastMCP(
     "Hetzner Cloud",
     host=os.environ.get("MCP_HOST", "localhost"),
-    port=int(os.environ.get("MCP_PORT", 8080))
+    port=int(os.environ.get("MCP_PORT", 8089))
 )
 
 # Helper function to convert Server object to dict

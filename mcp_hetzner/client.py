@@ -4,7 +4,6 @@ Simple client for the Hetzner Cloud MCP server.
 """
 
 import asyncio
-import json
 import dotenv
 import os
 import sys

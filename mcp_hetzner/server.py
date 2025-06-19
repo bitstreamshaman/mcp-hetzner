@@ -13,10 +13,10 @@ This MCP service provides functions to manage Hetzner Cloud resources:
 """
 
 import os
-import sys
 from typing import Dict, List, Optional, Any
 
-import dotenv
+import sys
+import toml
 from hcloud import Client
 from hcloud.servers.domain import Server
 from hcloud.firewalls.domain import (
@@ -34,34 +34,52 @@ from mcp.server.fastmcp import FastMCP
 
 
 def authenticate():
-    # Load environment variables
-    ifw_env_file = str(Path.home()) + "/.ifw" + "/.ifw.env"
-    dotenv.load_dotenv()
-    dotenv.load_dotenv(ifw_env_file)
+    """
+    Authenticate with Hetzner Cloud by retrieving the API token from hcloud CLI configuration.
 
-    # Check if Hetzner Cloud API token is configured
-    hcloud_token = os.environ.get("HCLOUD_TOKEN")
-    if not hcloud_token:
-        print("HCLOUD_TOKEN environment variable not set.")
-        hcloud_token = input("Please enter your Hetzner Cloud API token: ").strip()
+    This function reads the hcloud CLI configuration file to extract the API token
+    for the currently active context. The configuration file is expected to be
+    located at ~/.config/hcloud/cli.toml in TOML format.
 
-    if not hcloud_token:
-        print("Error: No token provided.")
-        sys.exit(1)
+    Returns:
+        str: The API token for the active hcloud context.
+    """
+    # Define the path to the hcloud CLI config file
+    config_path = Path.home() / ".config" / "hcloud" / "cli.toml"
 
-    # Add the token to the environment file
+    # Check if the config file exists
+    if not config_path.exists():
+        raise FileNotFoundError(
+            "hcloud CLI configuration not found. "
+            "Please run login to hcloud to setup the hcloud CLI first."
+        )
+
     try:
-        with open(ifw_env_file, "a") as f:
-            f.write(f"\nHCLOUD_TOKEN={hcloud_token}\n")
+        # Parse the TOML configuration file
+        config = toml.load(config_path)
 
-        # Set it in the current environment as well
-        os.environ["HCLOUD_TOKEN"] = hcloud_token
+        # Get the active context
+        active_context = config.get("active_context")
+        if not active_context:
+            raise ValueError("No active context found in hcloud configuration")
 
-    except IOError as e:
-        print(f"Error writing to {ifw_env_file}: {e}")
-        sys.exit(1)
+        # Find the matching context and retrieve the token
+        contexts = config.get("contexts", [])
+        for context in contexts:
+            if context.get("name") == active_context:
+                token = context.get("token")
+                if not token:
+                    raise ValueError(f"No token found for context '{active_context}'")
+                    sys.exit(1)
+                return token
 
-    return hcloud_token
+        # If we reach here, the active context wasn't found
+        raise ValueError(f"Active context '{active_context}' not found in contexts")
+
+    except toml.TomlDecodeError as e:
+        raise ValueError(f"Invalid TOML format in hcloud configuration: {e}")
+    except Exception as e:
+        raise RuntimeError(f"Error reading hcloud configuration: {e}")
 
 
 # Create Hetzner Cloud client

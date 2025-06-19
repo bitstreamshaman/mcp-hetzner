@@ -21,8 +21,11 @@ dotenv.load_dotenv()
 # Check if Hetzner Cloud API token is configured
 HCLOUD_TOKEN = os.environ.get("HCLOUD_TOKEN")
 if not HCLOUD_TOKEN:
-    print("Error: HCLOUD_TOKEN environment variable not set. Please add it to your .env file.")
+    print(
+        "Error: HCLOUD_TOKEN environment variable not set. Please add it to your .env file."
+    )
     sys.exit(1)
+
 
 async def run_example():
     """Run examples of Hetzner Cloud MCP usage."""
@@ -30,35 +33,43 @@ async def run_example():
     host = os.environ.get("MCP_HOST", "localhost")
     port = int(os.environ.get("MCP_PORT", 8080))
     client = Client(f"http://{host}:{port}")
-    
+
     # Get available server types
     server_types = await client.invoke("list_server_types")
     print("Available server types:")
     for server_type in server_types["server_types"][:3]:  # Show first 3 for brevity
-        print(f"- {server_type['name']}: {server_type['cores']} Cores, {server_type['memory_gb']} GB RAM, {server_type['disk_gb']} GB Disk")
+        print(
+            f"- {server_type['name']}: {server_type['cores']} Cores, {server_type['memory_gb']} GB RAM, {server_type['disk_gb']} GB Disk"
+        )
     print()
-    
+
     # Get available locations
     locations = await client.invoke("list_locations")
     print("Available locations:")
     for location in locations["locations"]:
-        print(f"- {location['name']}: {location['description']} ({location['country']}, {location['city']})")
+        print(
+            f"- {location['name']}: {location['description']} ({location['country']}, {location['city']})"
+        )
     print()
-    
+
     # List servers
     servers = await client.invoke("list_servers")
     print(f"Current servers: {len(servers['servers'])}")
     for server in servers["servers"]:
-        print(f"- {server['name']} (ID: {server['id']}): {server['status']}, IP: {server['public_net']['ipv4']}")
+        print(
+            f"- {server['name']} (ID: {server['id']}): {server['status']}, IP: {server['public_net']['ipv4']}"
+        )
     print()
-    
+
     # List volumes
     volumes = await client.invoke("list_volumes")
     print(f"Current volumes: {len(volumes.get('volumes', []))}")
-    for volume in volumes.get('volumes', []):
-        print(f"- {volume['name']} (ID: {volume['id']}): {volume['size']} GB, Server: {volume['server']}")
+    for volume in volumes.get("volumes", []):
+        print(
+            f"- {volume['name']} (ID: {volume['id']}): {volume['size']} GB, Server: {volume['server']}"
+        )
     print()
-    
+
     # Create a volume example (commented out to prevent actual creation)
     """
     print("Creating a new volume...")
@@ -116,9 +127,11 @@ async def run_example():
             print("Volume deleted successfully")
     """
 
+
 def main():
     """Entry point for the example script."""
     asyncio.run(run_example())
+
 
 if __name__ == "__main__":
     main()
